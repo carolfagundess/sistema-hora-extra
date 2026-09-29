@@ -7,6 +7,7 @@ const trocarSenhaRoutes = require('./routes/trocarSenha');
 const lancamentosRoutes = require('./routes/lancamentos');
 const aprovacaoRoutes = require('./routes/aprovacao');
 const relatorioRoutes = require('./routes/relatorio');
+const usuariosRoutes = require('./routes/usuarios');
 
 const app = express();
 
@@ -34,6 +35,7 @@ app.use(trocarSenhaRoutes);
 app.use(lancamentosRoutes);
 app.use(aprovacaoRoutes);
 app.use(relatorioRoutes);
+app.use(usuariosRoutes);
 
 app.get('/', exigirLogin, bloquearSeSenhaPendente, (req, res) => {
   if (req.usuarioLogado.perfil === 'lider') {

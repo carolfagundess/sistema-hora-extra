@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <%- include('partials/head', { titulo: 'Gestão de usuários' }) %>
+</head>
+<body>
+  <%- include('partials/topo', { usuario: usuario, ativo: 'usuarios' }) %>
+
+  <main class="pagina">
+    <div class="cabecalho-pagina">
+      <div>
+        <h1>Gestão de usuários</h1>
+        <p class="subtitulo">Cadastre pessoas do setor, defina perfis e redefina senhas.</p>
+      </div>
+    </div>
+
+    <% if (erro) { %>
+      <p class="alerta alerta-erro"><%= erro %></p>
+    <% } %>
+    <% if (mensagem) { %>
+      <p class="alerta alerta-info"><%= mensagem %></p>
+    <% } %>
+
+    <section class="cartao">
+      <div class="cartao-cabecalho">
+        <h2>Novo usuário</h2>
+      </div>
+      <form method="POST" action="/usuarios" class="formulario-lancamento">
+        <div class="campo campo-motivo">
+          <label for="nome">Nome</label>
+          <input type="text" id="nome" name="nome" placeholder="Nome completo" required>
+        </div>
+        <div class="campo campo-motivo">
+          <label for="email">E-mail</label>
+          <input type="email" id="email" name="email" placeholder="nome@empresa.com" required>
+        </div>
+        <div class="campo campo-hora">
+          <label for="perfil">Perfil</label>
+          <select id="perfil" name="perfil" required>
+            <% perfis.forEach(function(p) { %>
+              <option value="<%= p %>"><%= p %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div class="campo campo-hora">
+          <label for="senha_inicial">Senha inicial</label>
+          <input type="text" id="senha_inicial" name="senha_inicial" placeholder="Mínimo 8 caracteres" minlength="8" required>
+        </div>
+        <button type="submit" class="primario">Cadastrar</button>
+      </form>
+    </section>
+
+    <section class="cartao">
+      <div class="cartao-cabecalho">
+        <h2>Usuários do setor</h2>
+        <span class="contagem-pill"><%= usuarios.length %></span>
+      </div>
+
+      <div class="tabela-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>E-mail</th>
+              <th>Perfil</th>
+              <th>Status</th>
+              <th>Senha</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% usuarios.forEach(function(u) { %>
+              <tr>
+                <td><strong><%= u.nome %></strong></td>
+                <td class="celula-secundaria"><%= u.email %></td>
+                <td style="text-transform: capitalize;"><%= u.perfil %></td>
+                <td>
+                  <% if (u.ativo) { %>
+                    <span class="status-pill status-aprovado">ativo</span>
+                  <% } else { %>
+                    <span class="status-pill status-reprovado">inativo</span>
+                  <% } %>
+                </td>
+                <td>
+                  <% if (u.trocar_senha) { %>
+                    <span class="status-pill status-pendente">troca pendente</span>
+                  <% } else { %>
+                    <span class="celula-secundaria">definida</span>
+                  <% } %>
+                </td>
+                <td>
+                  <details class="acao-inline">
+                    <summary>Editar</summary>
+                    <form method="POST" action="/usuarios/<%= u.id %>/editar" class="formulario-inline">
+                      <input type="text" name="nome" value="<%= u.nome %>" required>
+                      <select name="perfil" required>
+                        <% perfis.forEach(function(p) { %>
+                          <option value="<%= p %>" <%= p === u.perfil ? 'selected' : '' %>><%= p %></option>
+                        <% }) %>
+                      </select>
+                      <label style="display:flex; align-items:center; gap:0.3rem; font-size:0.82rem;">
+                        <input type="checkbox" name="ativo" <%= u.ativo ? 'checked' : '' %> style="width:16px; height:16px;">
+                        Ativo
+                      </label>
+                      <button type="submit" class="botao-secundario">Salvar</button>
+                    </form>
+                  </details>
+                  <details class="acao-inline">
+                    <summary>Redefinir senha</summary>
+                    <form method="POST" action="/usuarios/<%= u.id %>/redefinir-senha" class="formulario-inline">
+                      <input type="text" name="senha_nova" placeholder="Nova senha (mín. 8)" minlength="8" required>
+                      <button type="submit" class="botao-secundario">Redefinir</button>
+                    </form>
+                  </details>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

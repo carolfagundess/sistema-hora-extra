@@ -13,6 +13,9 @@
         <a href="/aprovacao" class="nav-link <%= ativo === 'aprovacao' ? 'nav-link-ativo' : '' %>">Aprovações</a>
         <a href="/relatorio" class="nav-link <%= ativo === 'relatorio' ? 'nav-link-ativo' : '' %>">Visão do setor</a>
       <% } %>
+      <% if (usuario.perfil === 'lider') { %>
+        <a href="/usuarios" class="nav-link <%= ativo === 'usuarios' ? 'nav-link-ativo' : '' %>">Usuários</a>
+      <% } %>
     </nav>
 
     <div class="topbar-usuario">
