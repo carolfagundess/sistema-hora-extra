@@ -11,8 +11,12 @@ substituindo a planilha atual.
 
 ## Perfis
 - colaborador: lança horas e vê só o próprio histórico e saldo
-- sublider: aprova/reprova lançamentos da própria equipe
-- lider: tudo do sublider + todas as equipes, relatórios e gestão de usuários
+- sublider: colaborador com permissões de líder (aprova/reprova e vê
+  relatórios da própria equipe); substitui o líder, sempre ativo, sem
+  necessidade de "ausência" para valer
+- lider: sempre tem uma única equipe (nunca vê outras equipes); mesmo
+  escopo de aprovação e relatórios do sublider da sua equipe, mais gestão
+  de usuários (exclusiva do líder)
 
 ## Modelo de dados
 - usuarios: id, nome, email (único, identificador), senha_hash (opcional),
@@ -24,7 +28,8 @@ substituindo a planilha atual.
 ## Regras de negócio
 - O total é sempre calculado pelo servidor; nunca digitado.
 - Colaborador só edita/exclui lançamento pendente; aprovado é imutável.
-- Sublider só aprova lançamentos de usuários da sua equipe.
+- Sublider e líder só aprovam/decidem lançamentos de usuários da própria
+  equipe (nenhum perfil vê ou decide sobre outras equipes).
 - Ninguém aprova o próprio lançamento.
 - Toda decisão registra quem e quando.
 - Permissões SEMPRE validadas no backend (middleware), nunca só na tela.

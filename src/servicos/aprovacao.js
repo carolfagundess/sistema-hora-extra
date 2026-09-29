@@ -1,21 +1,11 @@
-// Regras de negocio da aprovacao de lancamentos. Sublider so decide sobre
-// lancamentos da propria equipe; lider decide sobre todas. Ninguem aprova
-// o proprio lancamento. Toda decisao registra quem e quando.
+// Regras de negocio da aprovacao de lancamentos. Lider tem sempre uma
+// unica equipe; sublider e um colaborador com as mesmas permissoes de
+// aprovacao do lider. Os dois decidem apenas sobre a propria equipe -
+// nenhum perfil enxerga ou decide sobre outras equipes. Ninguem aprova o
+// proprio lancamento. Toda decisao registra quem e quando.
 const db = require('../db');
 
 function listarPendentes(aprovador) {
-  if (aprovador.perfil === 'lider') {
-    return db
-      .prepare(
-        `SELECT l.*, u.nome AS usuario_nome, u.equipe AS usuario_equipe
-         FROM lancamentos l
-         JOIN usuarios u ON u.id = l.usuario_id
-         WHERE l.status = 'pendente' AND l.usuario_id != ?
-         ORDER BY l.data ASC, l.hora_inicio ASC`
-      )
-      .all(aprovador.id);
-  }
-
   return db
     .prepare(
       `SELECT l.*, u.nome AS usuario_nome, u.equipe AS usuario_equipe
@@ -27,9 +17,9 @@ function listarPendentes(aprovador) {
     .all(aprovador.equipe, aprovador.id);
 }
 
-// Verifica se o aprovador pode decidir sobre este lancamento: precisa estar
-// pendente, nao pode ser do proprio aprovador, e sublider so decide da
-// propria equipe.
+// Verifica se o aprovador pode decidir sobre este lancamento: precisa
+// estar pendente, nao pode ser do proprio aprovador, e precisa ser da
+// mesma equipe do aprovador (sublider e lider, igualmente).
 function podeDecidir(aprovador, lancamentoComUsuario) {
   if (!lancamentoComUsuario || lancamentoComUsuario.status !== 'pendente') {
     return false;
@@ -37,7 +27,7 @@ function podeDecidir(aprovador, lancamentoComUsuario) {
   if (lancamentoComUsuario.usuario_id === aprovador.id) {
     return false;
   }
-  if (aprovador.perfil === 'sublider' && lancamentoComUsuario.usuario_equipe !== aprovador.equipe) {
+  if (lancamentoComUsuario.usuario_equipe !== aprovador.equipe) {
     return false;
   }
   return true;
