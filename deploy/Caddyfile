@@ -1,0 +1,17 @@
+# Configuracao ativa agora: sem dominio, so IP, HTTP puro (porta 80).
+# Troque para o bloco de dominio (comentado abaixo) assim que houver um
+# dominio apontando para o IP da VM — o Caddy emite HTTPS automatico via
+# Let's Encrypt sozinho, sem configuracao extra.
+:80 {
+	reverse_proxy localhost:3000
+}
+
+# --- Quando houver dominio, comente o bloco acima e descomente este: ---
+# horas.suaempresa.com.br {
+# 	reverse_proxy localhost:3000
+# }
+#
+# Depois de trocar, lembre de:
+# 1. systemctl reload caddy
+# 2. Definir SESSION_SECURE_COOKIE=true no .env do app
+# 3. systemctl restart horas-extras

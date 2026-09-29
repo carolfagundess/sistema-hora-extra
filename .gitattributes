@@ -1,0 +1,4 @@
+# Scripts e arquivos de configuracao do Linux precisam de LF, mesmo
+# clonados/commitados a partir do Windows.
+deploy/* text eol=lf
+*.sh text eol=lf

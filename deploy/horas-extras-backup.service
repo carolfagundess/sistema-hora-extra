@@ -1,0 +1,7 @@
+[Unit]
+Description=Backup diario do banco de Horas Extras
+
+[Service]
+Type=oneshot
+User=horas-extras
+ExecStart=/opt/horas-extras/deploy/backup.sh

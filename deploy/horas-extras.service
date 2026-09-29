@@ -1,0 +1,22 @@
+[Unit]
+Description=Controle de Horas Extras (CRC)
+After=network.target
+
+[Service]
+Type=simple
+User=horas-extras
+Group=horas-extras
+WorkingDirectory=/opt/horas-extras
+EnvironmentFile=/opt/horas-extras/.env
+ExecStart=/usr/bin/node src/server.js
+Restart=on-failure
+RestartSec=5
+
+# Enrijecimento basico do sandbox systemd
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths=/var/lib/horas-extras
+
+[Install]
+WantedBy=multi-user.target
