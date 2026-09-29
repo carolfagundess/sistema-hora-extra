@@ -5,6 +5,7 @@ const { exigirLogin, bloquearSeSenhaPendente } = require('./auth');
 const loginRoutes = require('./routes/login');
 const trocarSenhaRoutes = require('./routes/trocarSenha');
 const lancamentosRoutes = require('./routes/lancamentos');
+const aprovacaoRoutes = require('./routes/aprovacao');
 
 const app = express();
 
@@ -30,6 +31,7 @@ app.use(
 app.use(loginRoutes);
 app.use(trocarSenhaRoutes);
 app.use(lancamentosRoutes);
+app.use(aprovacaoRoutes);
 
 app.get('/', exigirLogin, bloquearSeSenhaPendente, (req, res) => {
   res.redirect('/lancamentos');

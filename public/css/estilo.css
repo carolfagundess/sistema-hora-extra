@@ -186,3 +186,64 @@ details summary {
   font-size: 0.85rem;
   color: #2a5bd7;
 }
+
+.nav-topo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.nav-topo a {
+  color: #2a5bd7;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.nav-topo a:hover {
+  text-decoration: underline;
+}
+
+.nav-topo form {
+  margin-top: 0;
+}
+
+.aviso {
+  background: #eef2fb;
+  color: #1f3a8f;
+  padding: 0.6rem 1rem;
+  border-radius: 4px;
+}
+
+.botao-ok {
+  background: #2f8f4e;
+}
+
+.botao-ok:hover {
+  background: #256e3c;
+}
+
+.botao-negar {
+  background: #a4453a;
+}
+
+.botao-negar:hover {
+  background: #83372e;
+}
+
+.acoes-lote {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.acoes-lote input {
+  margin-top: 0;
+  flex: 1;
+  min-width: 200px;
+}
+
+.acoes-lote button {
+  margin-top: 0;
+}

@@ -9,12 +9,17 @@
   <main class="pagina-larga">
     <header class="cabecalho">
       <div>
-        <h1>Meus lancamentos</h1>
+        <h1>Meus Lançamentos</h1>
         <p><%= usuario.nome %> &middot; <%= usuario.equipe %></p>
       </div>
-      <form method="POST" action="/logout">
-        <button type="submit" class="link">Sair</button>
-      </form>
+      <nav class="nav-topo">
+        <% if (usuario.perfil === 'sublider' || usuario.perfil === 'lider') { %>
+          <a href="/aprovacao">Painel de aprovacao</a>
+        <% } %>
+        <form method="POST" action="/logout">
+          <button type="submit" class="link">Sair</button>
+        </form>
+      </nav>
     </header>
 
     <p class="total-mes">Total aprovado no mes: <strong><%= totalMesFormatado %></strong></p>
