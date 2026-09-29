@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Visao do setor - Controle de Horas Extras</title>
+  <link rel="stylesheet" href="/css/estilo.css">
+</head>
+<body>
+  <main class="pagina-larga">
+    <header class="cabecalho">
+      <div>
+        <h1>Visao do setor</h1>
+        <p><%= usuario.nome %> &middot; <%= usuario.perfil %></p>
+      </div>
+      <nav class="nav-topo">
+        <a href="/aprovacao">Painel de aprovacao</a>
+        <% if (usuario.perfil === 'sublider') { %>
+          <a href="/lancamentos">Meus lancamentos</a>
+        <% } %>
+        <form method="POST" action="/logout">
+          <button type="submit" class="link">Sair</button>
+        </form>
+      </nav>
+    </header>
+
+    <section class="cartao">
+      <form method="GET" action="/relatorio" class="formulario-linha">
+        <label>
+          Mes
+          <input type="month" name="mes" value="<%= anoMes %>">
+        </label>
+        <button type="submit">Filtrar</button>
+        <a class="botao-exportar" href="/relatorio/exportar?mes=<%= anoMes %>">Exportar Excel</a>
+      </form>
+    </section>
+
+    <section class="cartao">
+      <h2>Total por pessoa &mdash; <%= anoMes %></h2>
+
+      <% if (porPessoa.length === 0) { %>
+        <p>Nenhum usuario ativo cadastrado.</p>
+      <% } else { %>
+        <table>
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Perfil</th>
+              <th>Aprovado</th>
+              <th>Pendente</th>
+              <th>Reprovado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% porPessoa.forEach(function(p) { %>
+              <tr>
+                <td><%= p.nome %></td>
+                <td><%= p.perfil %></td>
+                <td><%= formatarMinutos(p.minutos_aprovados) %></td>
+                <td><%= formatarMinutos(p.minutos_pendentes) %></td>
+                <td><%= formatarMinutos(p.minutos_reprovados) %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      <% } %>
+    </section>
+  </main>
+</body>
+</html>

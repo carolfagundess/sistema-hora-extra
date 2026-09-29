@@ -13,6 +13,7 @@
         <p><%= usuario.nome %> &middot; <%= usuario.perfil %></p>
       </div>
       <nav class="nav-topo">
+        <a href="/relatorio">Visao do setor</a>
         <% if (usuario.perfil === 'sublider') { %>
           <a href="/lancamentos">Meus lancamentos</a>
         <% } %>

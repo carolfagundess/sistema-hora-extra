@@ -247,3 +247,17 @@ details summary {
 .acoes-lote button {
   margin-top: 0;
 }
+
+.botao-exportar {
+  display: inline-block;
+  padding: 0.6rem 1rem;
+  border-radius: 4px;
+  background: #2a5bd7;
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+.botao-exportar:hover {
+  background: #1f47ad;
+}
