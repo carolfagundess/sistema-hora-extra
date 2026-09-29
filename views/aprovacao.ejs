@@ -1,79 +1,82 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <title>Painel de aprovacao - Controle de Horas Extras</title>
-  <link rel="stylesheet" href="/css/estilo.css">
+  <%- include('partials/head', { titulo: 'Painel de aprovação' }) %>
 </head>
 <body>
-  <main class="pagina-larga">
-    <header class="cabecalho">
+  <%- include('partials/topo', { usuario: usuario, ativo: 'aprovacao' }) %>
+
+  <main class="pagina">
+    <div class="cabecalho-pagina">
       <div>
-        <h1>Painel de aprovacao</h1>
-        <p><%= usuario.nome %> &middot; <%= usuario.perfil %></p>
+        <h1>Painel de aprovação</h1>
+        <p class="subtitulo">Revise e decida sobre as horas extras pendentes do setor.</p>
       </div>
-      <nav class="nav-topo">
-        <a href="/relatorio">Visao do setor</a>
-        <% if (usuario.perfil === 'sublider') { %>
-          <a href="/lancamentos">Meus lancamentos</a>
-        <% } %>
-        <form method="POST" action="/logout">
-          <button type="submit" class="link">Sair</button>
-        </form>
-      </nav>
-    </header>
+    </div>
+
+    <div class="grade-estatisticas">
+      <div class="estatistica">
+        <div class="estatistica-rotulo">Aguardando decisão</div>
+        <div class="estatistica-valor cor-aviso"><%= pendentes.length %></div>
+      </div>
+    </div>
 
     <% if (mensagem) { %>
-      <p class="aviso"><%= mensagem %></p>
+      <p class="alerta alerta-info"><%= mensagem %></p>
     <% } %>
 
     <section class="cartao">
-      <h2>Pendentes (<%= pendentes.length %>)</h2>
+      <div class="cartao-cabecalho">
+        <h2>Pendentes</h2>
+        <span class="contagem-pill"><%= pendentes.length %></span>
+      </div>
 
       <% if (pendentes.length === 0) { %>
-        <p>Nenhum lancamento aguardando aprovacao.</p>
+        <p class="estado-vazio">Nenhum lançamento aguardando aprovação.</p>
       <% } else { %>
         <form method="POST" action="/aprovacao/lote" id="form-lote">
-          <table>
-            <thead>
-              <tr>
-                <th><input type="checkbox" id="marcar-todos"></th>
-                <th>Colaborador</th>
-                <th>Data</th>
-                <th>Horario</th>
-                <th>Total</th>
-                <th>Motivo</th>
-                <th>Decisao individual</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% pendentes.forEach(function(l) { %>
+          <div class="tabela-wrap">
+            <table>
+              <thead>
                 <tr>
-                  <td><input type="checkbox" name="ids" value="<%= l.id %>" class="marcar-item" form="form-lote"></td>
-                  <td><%= l.usuario_nome %></td>
-                  <td><%= l.data %></td>
-                  <td><%= l.hora_inicio %> - <%= l.hora_fim %></td>
-                  <td><%= formatarMinutos(l.total_minutos) %></td>
-                  <td><%= l.motivo %></td>
-                  <td>
-                    <details>
-                      <summary>Decidir</summary>
-                      <form method="POST" action="/aprovacao/<%= l.id %>/decidir" class="formulario-edicao">
-                        <input type="text" name="comentario" placeholder="Comentario (opcional)" maxlength="300">
-                        <button type="submit" name="decisao" value="aprovado" class="botao-ok">Aprovar</button>
-                        <button type="submit" name="decisao" value="reprovado" class="botao-negar">Reprovar</button>
-                      </form>
-                    </details>
-                  </td>
+                  <th><input type="checkbox" id="marcar-todos"></th>
+                  <th>Colaborador</th>
+                  <th>Data</th>
+                  <th>Horário</th>
+                  <th>Total</th>
+                  <th>Motivo</th>
+                  <th>Decisão individual</th>
                 </tr>
-              <% }) %>
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                <% pendentes.forEach(function(l) { %>
+                  <tr>
+                    <td><input type="checkbox" name="ids" value="<%= l.id %>" class="marcar-item" form="form-lote"></td>
+                    <td><strong><%= l.usuario_nome %></strong></td>
+                    <td><%= l.data %></td>
+                    <td class="celula-secundaria"><%= l.hora_inicio %>–<%= l.hora_fim %></td>
+                    <td><strong><%= formatarMinutos(l.total_minutos) %></strong></td>
+                    <td><%= l.motivo %></td>
+                    <td>
+                      <details class="acao-inline">
+                        <summary>Decidir</summary>
+                        <form method="POST" action="/aprovacao/<%= l.id %>/decidir" class="formulario-inline">
+                          <input type="text" name="comentario" placeholder="Comentário (opcional)" maxlength="300">
+                          <button type="submit" name="decisao" value="aprovado" class="botao-sucesso">Aprovar</button>
+                          <button type="submit" name="decisao" value="reprovado" class="botao-perigo">Reprovar</button>
+                        </form>
+                      </details>
+                    </td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
 
           <div class="acoes-lote">
-            <input type="text" name="comentario" placeholder="Comentario para o lote (opcional)" maxlength="300">
-            <button type="submit" name="decisao" value="aprovado" class="botao-ok">Aprovar selecionados</button>
-            <button type="submit" name="decisao" value="reprovado" class="botao-negar">Reprovar selecionados</button>
+            <input type="text" name="comentario" placeholder="Comentário para o lote (opcional)" maxlength="300">
+            <button type="submit" name="decisao" value="aprovado" class="botao-sucesso">Aprovar selecionados</button>
+            <button type="submit" name="decisao" value="reprovado" class="botao-perigo">Reprovar selecionados</button>
           </div>
         </form>
       <% } %>

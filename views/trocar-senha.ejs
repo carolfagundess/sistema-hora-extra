@@ -1,29 +1,41 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <title>Trocar senha - Controle de Horas Extras</title>
-  <link rel="stylesheet" href="/css/estilo.css">
+  <%- include('partials/head', { titulo: 'Trocar senha' }) %>
 </head>
 <body>
-  <main class="caixa-login">
-    <h1>Defina uma nova senha</h1>
-    <p>Este e o seu primeiro acesso (ou sua senha foi redefinida). Escolha uma nova senha para continuar.</p>
-    <% if (erro) { %>
-      <p class="erro"><%= erro %></p>
-    <% } %>
-    <form method="POST" action="/trocar-senha">
-      <label for="senha_nova">Nova senha</label>
-      <input type="password" id="senha_nova" name="senha_nova" minlength="8" required autofocus>
+  <main class="tela-auth">
+    <div class="cartao-auth">
+      <div class="marca-auth">
+        <span class="marca-icone">CRC</span>
+        <span class="marca-texto"><strong>Horas Extras</strong></span>
+      </div>
 
-      <label for="confirmar_senha">Confirmar nova senha</label>
-      <input type="password" id="confirmar_senha" name="confirmar_senha" minlength="8" required>
+      <h1>Defina uma nova senha</h1>
+      <p class="subtitulo">Este é o seu primeiro acesso (ou sua senha foi redefinida). Escolha uma nova senha para continuar.</p>
 
-      <button type="submit">Salvar</button>
-    </form>
-    <form method="POST" action="/logout">
-      <button type="submit" class="link">Sair</button>
-    </form>
+      <% if (erro) { %>
+        <p class="alerta alerta-erro"><%= erro %></p>
+      <% } %>
+
+      <form method="POST" action="/trocar-senha">
+        <div class="campo">
+          <label for="senha_nova">Nova senha</label>
+          <input type="password" id="senha_nova" name="senha_nova" minlength="8" placeholder="Mínimo de 8 caracteres" required autofocus>
+        </div>
+        <div class="campo">
+          <label for="confirmar_senha">Confirmar nova senha</label>
+          <input type="password" id="confirmar_senha" name="confirmar_senha" minlength="8" placeholder="Repita a senha" required>
+        </div>
+        <button type="submit" class="primario">Salvar e continuar</button>
+      </form>
+
+      <div class="acoes-auth-secundarias">
+        <form method="POST" action="/logout">
+          <button type="submit" class="botao-texto">Sair</button>
+        </form>
+      </div>
+    </div>
   </main>
 </body>
 </html>

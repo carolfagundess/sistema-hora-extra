@@ -1,25 +1,35 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <title>Login - Controle de Horas Extras</title>
-  <link rel="stylesheet" href="/css/estilo.css">
+  <%- include('partials/head', { titulo: 'Login' }) %>
 </head>
 <body>
-  <main class="caixa-login">
-    <h1>Controle de Horas Extras</h1>
-    <% if (erro) { %>
-      <p class="erro"><%= erro %></p>
-    <% } %>
-    <form method="POST" action="/login">
-      <label for="email">E-mail</label>
-      <input type="email" id="email" name="email" required autofocus>
+  <main class="tela-auth">
+    <div class="cartao-auth">
+      <div class="marca-auth">
+        <span class="marca-icone">CRC</span>
+        <span class="marca-texto"><strong>Horas Extras</strong></span>
+      </div>
 
-      <label for="senha">Senha</label>
-      <input type="password" id="senha" name="senha" required>
+      <h1>Entrar</h1>
+      <p class="subtitulo">Acesse com seu e-mail corporativo para lançar ou aprovar horas extras.</p>
 
-      <button type="submit">Entrar</button>
-    </form>
+      <% if (erro) { %>
+        <p class="alerta alerta-erro"><%= erro %></p>
+      <% } %>
+
+      <form method="POST" action="/login">
+        <div class="campo">
+          <label for="email">E-mail</label>
+          <input type="email" id="email" name="email" placeholder="nome@empresa.com" required autofocus>
+        </div>
+        <div class="campo">
+          <label for="senha">Senha</label>
+          <input type="password" id="senha" name="senha" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="primario">Entrar</button>
+      </form>
+    </div>
   </main>
 </body>
 </html>

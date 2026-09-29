@@ -1,67 +1,65 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <title>Visao do setor - Controle de Horas Extras</title>
-  <link rel="stylesheet" href="/css/estilo.css">
+  <%- include('partials/head', { titulo: 'Visão do setor' }) %>
 </head>
 <body>
-  <main class="pagina-larga">
-    <header class="cabecalho">
+  <%- include('partials/topo', { usuario: usuario, ativo: 'relatorio' }) %>
+
+  <main class="pagina">
+    <div class="cabecalho-pagina">
       <div>
-        <h1>Visao do setor</h1>
-        <p><%= usuario.nome %> &middot; <%= usuario.perfil %></p>
+        <h1>Visão do setor</h1>
+        <p class="subtitulo">Total de horas extras por pessoa, mês a mês.</p>
       </div>
-      <nav class="nav-topo">
-        <a href="/aprovacao">Painel de aprovacao</a>
-        <% if (usuario.perfil === 'sublider') { %>
-          <a href="/lancamentos">Meus lancamentos</a>
-        <% } %>
-        <form method="POST" action="/logout">
-          <button type="submit" class="link">Sair</button>
-        </form>
-      </nav>
-    </header>
+    </div>
 
     <section class="cartao">
-      <form method="GET" action="/relatorio" class="formulario-linha">
-        <label>
-          Mes
-          <input type="month" name="mes" value="<%= anoMes %>">
-        </label>
-        <button type="submit">Filtrar</button>
-        <a class="botao-exportar" href="/relatorio/exportar?mes=<%= anoMes %>">Exportar Excel</a>
+      <form method="GET" action="/relatorio" class="barra-filtro">
+        <div class="campo">
+          <label for="mes">Mês</label>
+          <input type="month" id="mes" name="mes" value="<%= anoMes %>">
+        </div>
+        <button type="submit" class="botao-secundario">Filtrar</button>
+        <a class="botao primario" href="/relatorio/exportar?mes=<%= anoMes %>">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Exportar Excel
+        </a>
       </form>
     </section>
 
     <section class="cartao">
-      <h2>Total por pessoa &mdash; <%= anoMes %></h2>
+      <div class="cartao-cabecalho">
+        <h2>Total por pessoa — <%= anoMes %></h2>
+      </div>
 
       <% if (porPessoa.length === 0) { %>
-        <p>Nenhum usuario ativo cadastrado.</p>
+        <p class="estado-vazio">Nenhum usuário ativo cadastrado.</p>
       <% } else { %>
-        <table>
-          <thead>
-            <tr>
-              <th>Nome</th>
-              <th>Perfil</th>
-              <th>Aprovado</th>
-              <th>Pendente</th>
-              <th>Reprovado</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% porPessoa.forEach(function(p) { %>
+        <div class="tabela-wrap">
+          <table>
+            <thead>
               <tr>
-                <td><%= p.nome %></td>
-                <td><%= p.perfil %></td>
-                <td><%= formatarMinutos(p.minutos_aprovados) %></td>
-                <td><%= formatarMinutos(p.minutos_pendentes) %></td>
-                <td><%= formatarMinutos(p.minutos_reprovados) %></td>
+                <th>Nome</th>
+                <th>Perfil</th>
+                <th>Aprovado</th>
+                <th>Pendente</th>
+                <th>Reprovado</th>
               </tr>
-            <% }) %>
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              <% porPessoa.forEach(function(p) { %>
+                <tr>
+                  <td><strong><%= p.nome %></strong></td>
+                  <td class="celula-secundaria"><%= p.perfil %></td>
+                  <td><span class="status-pill status-aprovado"><%= formatarMinutos(p.minutos_aprovados) %></span></td>
+                  <td><span class="status-pill status-pendente"><%= formatarMinutos(p.minutos_pendentes) %></span></td>
+                  <td><span class="status-pill status-reprovado"><%= formatarMinutos(p.minutos_reprovados) %></span></td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
       <% } %>
     </section>
   </main>
