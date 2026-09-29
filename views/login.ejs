@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - Controle de Horas Extras</title>
+  <link rel="stylesheet" href="/css/estilo.css">
+</head>
+<body>
+  <main class="caixa-login">
+    <h1>Controle de Horas Extras</h1>
+    <% if (erro) { %>
+      <p class="erro"><%= erro %></p>
+    <% } %>
+    <form method="POST" action="/login">
+      <label for="email">E-mail</label>
+      <input type="email" id="email" name="email" required autofocus>
+
+      <label for="senha">Senha</label>
+      <input type="password" id="senha" name="senha" required>
+
+      <button type="submit">Entrar</button>
+    </form>
+  </main>
+</body>
+</html>
