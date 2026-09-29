@@ -1,7 +1,9 @@
 # Controle de Horas Extras
 
-Sistema web interno para lançamento e aprovação de horas extras da equipe,
-substituindo a planilha atual.
+Sistema web interno para lançamento e aprovação de horas extras, do setor
+de Configuração e Relacionamento Corporativo (CRC), substituindo a
+planilha atual. Uso restrito a esse setor — não há conceito de múltiplas
+equipes ou setores dentro do sistema.
 
 ## Stack
 - Node.js + Express
@@ -12,15 +14,14 @@ substituindo a planilha atual.
 ## Perfis
 - colaborador: lança horas e vê só o próprio histórico e saldo
 - sublider: colaborador com permissões de líder (aprova/reprova e vê
-  relatórios da própria equipe); substitui o líder, sempre ativo, sem
+  relatórios de todo o setor); substitui o líder, sempre ativo, sem
   necessidade de "ausência" para valer
-- lider: sempre tem uma única equipe (nunca vê outras equipes); mesmo
-  escopo de aprovação e relatórios do sublider da sua equipe, mais gestão
+- lider: mesmo escopo de aprovação e relatórios do sublider, mais gestão
   de usuários (exclusiva do líder)
 
 ## Modelo de dados
 - usuarios: id, nome, email (único, identificador), senha_hash (opcional),
-  perfil, equipe, gestor_id, ativo, trocar_senha
+  perfil, gestor_id, ativo, trocar_senha
 - lancamentos: id, usuario_id, data, hora_inicio, hora_fim, total_minutos
   (calculado pelo servidor), motivo, status (pendente|aprovado|reprovado),
   aprovador_id, decidido_em, comentario, criado_em
@@ -28,8 +29,7 @@ substituindo a planilha atual.
 ## Regras de negócio
 - O total é sempre calculado pelo servidor; nunca digitado.
 - Colaborador só edita/exclui lançamento pendente; aprovado é imutável.
-- Sublider e líder só aprovam/decidem lançamentos de usuários da própria
-  equipe (nenhum perfil vê ou decide sobre outras equipes).
+- Sublider e líder aprovam/decidem qualquer lançamento pendente do setor.
 - Ninguém aprova o próprio lançamento.
 - Toda decisão registra quem e quando.
 - Permissões SEMPRE validadas no backend (middleware), nunca só na tela.
@@ -47,7 +47,7 @@ substituindo a planilha atual.
 1. Login
 2. Meus lançamentos (formulário + lista com status + total do mês)
 3. Painel de aprovação (fila de pendentes, aprovar/reprovar, comentário, lote)
-4. Visão da equipe (total por pessoa/mês, filtros, exportar Excel)
+4. Visão do setor (total por pessoa/mês, filtros, exportar Excel)
 5. Gestão de usuários (só líder)
 
 ## Etapas
@@ -55,7 +55,7 @@ substituindo a planilha atual.
 2. Autenticação local + middleware de perfis
 3. Tela de lançamento do colaborador
 4. Painel de aprovação
-5. Visão da equipe + exportação
+5. Visão do setor + exportação
 6. Testes de permissão entre perfis
 7. Deploy (systemd, HTTPS, backup diário do .sqlite)
 

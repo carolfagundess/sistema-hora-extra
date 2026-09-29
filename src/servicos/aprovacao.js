@@ -1,47 +1,34 @@
-// Regras de negocio da aprovacao de lancamentos. Lider tem sempre uma
-// unica equipe; sublider e um colaborador com as mesmas permissoes de
-// aprovacao do lider. Os dois decidem apenas sobre a propria equipe -
-// nenhum perfil enxerga ou decide sobre outras equipes. Ninguem aprova o
-// proprio lancamento. Toda decisao registra quem e quando.
+// Regras de negocio da aprovacao de lancamentos. Sistema de setor unico
+// (CRC): sublider e lider aprovam qualquer lancamento pendente, exceto o
+// proprio. Toda decisao registra quem e quando.
 const db = require('../db');
 
 function listarPendentes(aprovador) {
   return db
     .prepare(
-      `SELECT l.*, u.nome AS usuario_nome, u.equipe AS usuario_equipe
+      `SELECT l.*, u.nome AS usuario_nome
        FROM lancamentos l
        JOIN usuarios u ON u.id = l.usuario_id
-       WHERE l.status = 'pendente' AND u.equipe = ? AND l.usuario_id != ?
+       WHERE l.status = 'pendente' AND l.usuario_id != ?
        ORDER BY l.data ASC, l.hora_inicio ASC`
     )
-    .all(aprovador.equipe, aprovador.id);
+    .all(aprovador.id);
 }
 
 // Verifica se o aprovador pode decidir sobre este lancamento: precisa
-// estar pendente, nao pode ser do proprio aprovador, e precisa ser da
-// mesma equipe do aprovador (sublider e lider, igualmente).
-function podeDecidir(aprovador, lancamentoComUsuario) {
-  if (!lancamentoComUsuario || lancamentoComUsuario.status !== 'pendente') {
+// estar pendente e nao pode ser do proprio aprovador.
+function podeDecidir(aprovador, lancamento) {
+  if (!lancamento || lancamento.status !== 'pendente') {
     return false;
   }
-  if (lancamentoComUsuario.usuario_id === aprovador.id) {
-    return false;
-  }
-  if (lancamentoComUsuario.usuario_equipe !== aprovador.equipe) {
+  if (lancamento.usuario_id === aprovador.id) {
     return false;
   }
   return true;
 }
 
 function buscarPendentePorId(id) {
-  return db
-    .prepare(
-      `SELECT l.*, u.equipe AS usuario_equipe
-       FROM lancamentos l
-       JOIN usuarios u ON u.id = l.usuario_id
-       WHERE l.id = ?`
-    )
-    .get(id);
+  return db.prepare('SELECT * FROM lancamentos WHERE id = ?').get(id);
 }
 
 function decidir(id, aprovador, decisao, comentario) {
@@ -60,8 +47,8 @@ function decidir(id, aprovador, decisao, comentario) {
 }
 
 // Decide em lote; ignora silenciosamente ids que o aprovador nao pode
-// decidir (ja resolvidos por outra pessoa, de outra equipe, ou proprios),
-// contando quantos foram de fato aplicados.
+// decidir (ja resolvidos por outra pessoa ou proprios), contando quantos
+// foram de fato aplicados.
 function decidirEmLote(ids, aprovador, decisao, comentario) {
   let aplicados = 0;
   for (const id of ids) {

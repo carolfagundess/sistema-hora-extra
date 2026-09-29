@@ -10,7 +10,7 @@
     <header class="cabecalho">
       <div>
         <h1>Painel de aprovacao</h1>
-        <p><%= usuario.nome %> &middot; <%= usuario.equipe %></p>
+        <p><%= usuario.nome %> &middot; <%= usuario.perfil %></p>
       </div>
       <nav class="nav-topo">
         <a href="/lancamentos">Meus lancamentos</a>
@@ -36,7 +36,6 @@
               <tr>
                 <th><input type="checkbox" id="marcar-todos"></th>
                 <th>Colaborador</th>
-                <th>Equipe</th>
                 <th>Data</th>
                 <th>Horario</th>
                 <th>Total</th>
@@ -49,7 +48,6 @@
                 <tr>
                   <td><input type="checkbox" name="ids" value="<%= l.id %>" class="marcar-item" form="form-lote"></td>
                   <td><%= l.usuario_nome %></td>
-                  <td><%= l.usuario_equipe %></td>
                   <td><%= l.data %></td>
                   <td><%= l.hora_inicio %> - <%= l.hora_fim %></td>
                   <td><%= formatarMinutos(l.total_minutos) %></td>

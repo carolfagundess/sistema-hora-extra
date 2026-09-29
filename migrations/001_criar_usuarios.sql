@@ -5,12 +5,10 @@ CREATE TABLE usuarios (
   email TEXT NOT NULL UNIQUE,
   senha_hash TEXT,
   perfil TEXT NOT NULL CHECK (perfil IN ('colaborador', 'sublider', 'lider')),
-  equipe TEXT NOT NULL,
   gestor_id INTEGER REFERENCES usuarios(id),
   ativo INTEGER NOT NULL DEFAULT 1,
   trocar_senha INTEGER NOT NULL DEFAULT 1,
   criado_em TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
-CREATE INDEX idx_usuarios_equipe ON usuarios(equipe);
 CREATE INDEX idx_usuarios_gestor_id ON usuarios(gestor_id);

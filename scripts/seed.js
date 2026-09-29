@@ -11,8 +11,8 @@ function hashSenha(senha) {
 }
 
 const inserirUsuario = db.prepare(`
-  INSERT INTO usuarios (nome, email, senha_hash, perfil, equipe, gestor_id, ativo, trocar_senha)
-  VALUES (@nome, @email, @senha_hash, @perfil, @equipe, @gestor_id, 1, 1)
+  INSERT INTO usuarios (nome, email, senha_hash, perfil, gestor_id, ativo, trocar_senha)
+  VALUES (@nome, @email, @senha_hash, @perfil, @gestor_id, 1, 1)
 `);
 
 const seed = db.transaction(() => {
@@ -21,7 +21,6 @@ const seed = db.transaction(() => {
     email: 'ana.lider@empresa.com',
     senha_hash: hashSenha(SENHA_INICIAL),
     perfil: 'lider',
-    equipe: 'Operacoes',
     gestor_id: null,
   });
 
@@ -30,7 +29,6 @@ const seed = db.transaction(() => {
     email: 'bruno.sublider@empresa.com',
     senha_hash: hashSenha(SENHA_INICIAL),
     perfil: 'sublider',
-    equipe: 'Operacoes',
     gestor_id: lider.lastInsertRowid,
   });
 
@@ -39,8 +37,7 @@ const seed = db.transaction(() => {
     email: 'carla.colaboradora@empresa.com',
     senha_hash: hashSenha(SENHA_INICIAL),
     perfil: 'colaborador',
-    equipe: 'Operacoes',
-    gestor_id: sublider.lastInsertRowid,
+    gestor_id: lider.lastInsertRowid,
   });
 
   inserirUsuario.run({
@@ -48,17 +45,6 @@ const seed = db.transaction(() => {
     email: 'diego.colaborador@empresa.com',
     senha_hash: hashSenha(SENHA_INICIAL),
     perfil: 'colaborador',
-    equipe: 'Operacoes',
-    gestor_id: sublider.lastInsertRowid,
-  });
-
-  // Colaborador de outra equipe, para testar isolamento entre equipes
-  inserirUsuario.run({
-    nome: 'Elis Outraequipe',
-    email: 'elis.outraequipe@empresa.com',
-    senha_hash: hashSenha(SENHA_INICIAL),
-    perfil: 'colaborador',
-    equipe: 'Financeiro',
     gestor_id: lider.lastInsertRowid,
   });
 });
@@ -68,6 +54,5 @@ seed();
 console.log('Seed concluido. Usuarios de teste (senha: trocar123):');
 console.log('- lider:       ana.lider@empresa.com');
 console.log('- sublider:    bruno.sublider@empresa.com');
-console.log('- colaborador: carla.colaboradora@empresa.com (equipe Operacoes)');
-console.log('- colaborador: diego.colaborador@empresa.com (equipe Operacoes)');
-console.log('- colaborador: elis.outraequipe@empresa.com (equipe Financeiro)');
+console.log('- colaborador: carla.colaboradora@empresa.com');
+console.log('- colaborador: diego.colaborador@empresa.com');
