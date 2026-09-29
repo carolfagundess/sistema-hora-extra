@@ -1,24 +1,60 @@
-# Homologação com Docker (VM local)
+# Homologação com Docker (VM Linux local)
 
-Roteiro rápido para rodar o sistema na VM do seu notebook, para a equipe
-testar antes do deploy definitivo. Já foi testado ponta a ponta (build,
-subida, login, criação de usuário, restart com persistência de dados).
+Roteiro para rodar o sistema numa VM Linux (Ubuntu/Debian) no seu
+notebook, para a equipe testar antes do deploy definitivo. Já foi testado
+ponta a ponta (build, subida, login, criação de usuário, restart com
+persistência de dados) — o que muda aqui é só o provisionamento da VM.
 
-## Pré-requisitos na VM
+## 0. Provisionar a VM
 
-- Docker + Docker Compose instalados (`docker --version`, `docker compose version`)
-- Repositório clonado
+Se a VM ainda não existe: crie uma VM Ubuntu Server (22.04+) no
+VirtualBox/VMware/Hyper-V com rede em modo **bridge** (não NAT) — assim
+ela pega um IP na sua rede local e o resto do time consegue acessar. Rede
+NAT deixaria a VM visível só para o seu notebook.
+
+Instalar Docker Engine + Compose na VM (dentro da VM, via SSH ou console):
+
+```bash
+sudo apt update && sudo apt install -y ca-certificates curl git
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt update
+sudo apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+
+sudo usermod -aG docker $USER   # evita precisar de sudo em todo comando docker
+newgrp docker                    # aplica o grupo na sessao atual sem precisar relogar
+
+sudo systemctl enable --now docker   # garante que o Docker sobe sozinho apos reboot da VM
+```
+
+Confirme: `docker --version` e `docker compose version`.
+
+Liberar a porta no firewall da VM, se o `ufw` estiver ativo:
+
+```bash
+sudo ufw allow 3000/tcp
+```
+
+Clonar o repositório:
+
+```bash
+git clone <url-do-repositorio> sistema-hora-extra
+cd sistema-hora-extra
+```
 
 ## 1. Configurar o segredo de sessão
 
-```bash
-cd sistema-hora-extra
-echo "SESSION_SECRET=$(node -e "console.log(require('crypto').randomBytes(32).toString('hex'))")" > .env
-```
+A VM não precisa ter Node instalado (só Docker) — use `openssl`, que já
+vem no Ubuntu:
 
-Se a VM não tiver Node instalado, gere a variável em qualquer outra
-máquina e cole no `.env` manualmente — só precisa ser uma string longa e
-aleatória.
+```bash
+echo "SESSION_SECRET=$(openssl rand -hex 32)" > .env
+```
 
 ## 2. Subir o sistema
 
@@ -64,9 +100,10 @@ docker compose up -d --build      # reconstruir apos alguma mudanca no codigo
 
 Isso aqui é só para **homologação interna**, não é o deploy final:
 - Sem Caddy/HTTPS — HTTP puro, adequado só para rede local/VPN
-- Sem systemd — o Docker Compose cuida de reiniciar o container
-  (`restart: unless-stopped`), mas não sobrevive a um reboot da VM a
-  menos que o Docker esteja configurado para iniciar no boot
+- Sem systemd para o app em si — o Docker Compose cuida de reiniciar o
+  container (`restart: unless-stopped`); como o passo 0 já habilitou o
+  Docker no boot da VM (`systemctl enable --now docker`), o container
+  volta sozinho depois de um reboot
 - Sem backup automatico — os dados ficam no volume Docker
   (`sistema-hora-extra_dados-horas-extras`); se for testar por muito
   tempo, faca um backup manual:
