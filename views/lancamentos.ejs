@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Meus lancamentos - Controle de Horas Extras</title>
+  <link rel="stylesheet" href="/css/estilo.css">
+</head>
+<body>
+  <main class="pagina-larga">
+    <header class="cabecalho">
+      <div>
+        <h1>Meus lancamentos</h1>
+        <p><%= usuario.nome %> &middot; <%= usuario.equipe %></p>
+      </div>
+      <form method="POST" action="/logout">
+        <button type="submit" class="link">Sair</button>
+      </form>
+    </header>
+
+    <p class="total-mes">Total aprovado no mes: <strong><%= totalMesFormatado %></strong></p>
+
+    <% if (erro) { %>
+      <p class="erro"><%= erro %></p>
+    <% } %>
+
+    <section class="cartao">
+      <h2>Novo lancamento</h2>
+      <form method="POST" action="/lancamentos" class="formulario-linha">
+        <label>
+          Data
+          <input type="date" name="data" required>
+        </label>
+        <label>
+          Inicio
+          <input type="time" name="hora_inicio" required>
+        </label>
+        <label>
+          Fim
+          <input type="time" name="hora_fim" required>
+        </label>
+        <label class="cresce">
+          Motivo
+          <input type="text" name="motivo" maxlength="200" required>
+        </label>
+        <button type="submit">Lancar</button>
+      </form>
+    </section>
+
+    <section class="cartao">
+      <h2>Historico</h2>
+      <% if (lancamentos.length === 0) { %>
+        <p>Nenhum lancamento ainda.</p>
+      <% } else { %>
+        <table>
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Horario</th>
+              <th>Total</th>
+              <th>Motivo</th>
+              <th>Status</th>
+              <th>Comentario</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% lancamentos.forEach(function(l) { %>
+              <tr>
+                <td><%= l.data %></td>
+                <td><%= l.hora_inicio %> - <%= l.hora_fim %></td>
+                <td><%= formatarMinutos(l.total_minutos) %></td>
+                <td><%= l.motivo %></td>
+                <td><span class="status status-<%= l.status %>"><%= l.status %></span></td>
+                <td><%= l.comentario || '-' %></td>
+                <td>
+                  <% if (l.status === 'pendente') { %>
+                    <details>
+                      <summary>Editar</summary>
+                      <form method="POST" action="/lancamentos/<%= l.id %>/editar" class="formulario-edicao">
+                        <input type="date" name="data" value="<%= l.data %>" required>
+                        <input type="time" name="hora_inicio" value="<%= l.hora_inicio %>" required>
+                        <input type="time" name="hora_fim" value="<%= l.hora_fim %>" required>
+                        <input type="text" name="motivo" value="<%= l.motivo %>" maxlength="200" required>
+                        <button type="submit">Salvar</button>
+                      </form>
+                    </details>
+                    <form method="POST" action="/lancamentos/<%= l.id %>/excluir" onsubmit="return confirm('Excluir este lancamento?');">
+                      <button type="submit" class="link">Excluir</button>
+                    </form>
+                  <% } %>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      <% } %>
+    </section>
+  </main>
+</body>
+</html>

@@ -70,3 +70,119 @@ button.link:hover {
   background: none;
   color: #222;
 }
+
+main.pagina-larga {
+  max-width: 900px;
+}
+
+.cabecalho {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.cabecalho form {
+  margin-top: 0;
+}
+
+.total-mes {
+  background: #eef2fb;
+  padding: 0.6rem 1rem;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.cartao {
+  background: #fafbfc;
+  border: 1px solid #e3e5e9;
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.cartao h2 {
+  margin-top: 0;
+  font-size: 1.05rem;
+}
+
+.formulario-linha {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.75rem;
+}
+
+.formulario-linha label {
+  margin-top: 0;
+  display: flex;
+  flex-direction: column;
+  font-size: 0.85rem;
+}
+
+.formulario-linha .cresce {
+  flex: 1;
+  min-width: 180px;
+}
+
+.formulario-linha button {
+  margin-top: 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.5rem;
+}
+
+th, td {
+  text-align: left;
+  padding: 0.5rem;
+  border-bottom: 1px solid #e3e5e9;
+  font-size: 0.9rem;
+}
+
+.status {
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  text-transform: capitalize;
+}
+
+.status-pendente {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status-aprovado {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-reprovado {
+  background: #fdeaea;
+  color: #a11;
+}
+
+.formulario-edicao {
+  flex-direction: row;
+  gap: 0.4rem;
+  margin: 0.5rem 0;
+}
+
+.formulario-edicao input {
+  margin-top: 0;
+  padding: 0.3rem;
+  font-size: 0.85rem;
+}
+
+.formulario-edicao button {
+  margin-top: 0;
+  padding: 0.3rem 0.6rem;
+}
+
+details summary {
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: #2a5bd7;
+}
