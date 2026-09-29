@@ -1,0 +1,16 @@
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      SESSION_SECRET: ${SESSION_SECRET:?defina SESSION_SECRET no .env}
+      SESSION_SECURE_COOKIE: "false"
+      DB_PATH: /data/dados.sqlite
+    volumes:
+      - dados-horas-extras:/data
+    restart: unless-stopped
+
+volumes:
+  dados-horas-extras:

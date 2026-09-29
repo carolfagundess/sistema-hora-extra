@@ -53,33 +53,17 @@ sudo -u horas-extras env $(cat .env | xargs) node scripts/migrate.js
 ```
 
 Não existe tela de "primeiro acesso" — o primeiro líder precisa ser
-criado uma vez, direto pelo serviço, antes de qualquer login. Crie um
-script local temporário (não commitar) baseado neste modelo e rode uma
-vez só:
-
-```js
-// /tmp/bootstrap-lider.js — rode com: node /tmp/bootstrap-lider.js
-// depois APAGUE o arquivo (contém a senha inicial em texto puro).
-const usuariosServico = require('/opt/horas-extras/src/servicos/usuarios');
-
-usuariosServico
-  .criar({
-    nome: 'Thomaz Perini',
-    email: 'thomaz.perini@redeunifique.com.br',
-    perfil: 'lider',
-    senhaInicial: 'DEFINA-UMA-SENHA-FORTE-AQUI',
-  })
-  .then(() => console.log('Lider criado.'))
-  .catch((e) => console.error(e));
-```
+criado uma vez, direto pelo terminal, antes de qualquer login:
 
 ```bash
-sudo -u horas-extras env DB_PATH=/var/lib/horas-extras/dados.sqlite node /tmp/bootstrap-lider.js
-rm /tmp/bootstrap-lider.js
+sudo -u horas-extras env DB_PATH=/var/lib/horas-extras/dados.sqlite \
+  node scripts/criar-usuario.js "Thomaz Perini" thomaz.perini@redeunifique.com.br lider "DEFINA-UMA-SENHA-FORTE-AQUI"
 ```
 
 Depois disso, o próprio líder cadastra o resto da equipe pela tela
-**Gestão de usuários**, sem precisar mais mexer em terminal.
+**Gestão de usuários**, sem precisar mais mexer em terminal. O script
+`scripts/criar-usuario.js` também serve para recriar uma conta líder no
+futuro caso todas as contas líder fiquem inativas.
 
 ## 6. Serviço systemd (a aplicação)
 
