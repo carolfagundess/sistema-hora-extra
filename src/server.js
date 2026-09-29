@@ -1,8 +1,9 @@
 const path = require('path');
 const express = require('express');
 const session = require('express-session');
-const { exigirLogin } = require('./auth');
+const { exigirLogin, bloquearSeSenhaPendente } = require('./auth');
 const loginRoutes = require('./routes/login');
+const trocarSenhaRoutes = require('./routes/trocarSenha');
 
 const app = express();
 
@@ -26,8 +27,9 @@ app.use(
 );
 
 app.use(loginRoutes);
+app.use(trocarSenhaRoutes);
 
-app.get('/', exigirLogin, (req, res) => {
+app.get('/', exigirLogin, bloquearSeSenhaPendente, (req, res) => {
   res.render('index', { usuario: req.usuarioLogado });
 });
 

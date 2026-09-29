@@ -77,9 +77,30 @@ function exigirPerfil(...perfis) {
   };
 }
 
+// Impede o acesso a qualquer tela enquanto a troca de senha obrigatoria
+// nao for feita (exceto a propria tela de troca e o logout).
+const ROTAS_LIBERADAS_COM_SENHA_PENDENTE = ['/trocar-senha', '/logout'];
+
+function bloquearSeSenhaPendente(req, res, next) {
+  const usuario = req.usuarioLogado || getUsuarioLogado(req);
+  if (usuario && usuario.trocar_senha && !ROTAS_LIBERADAS_COM_SENHA_PENDENTE.includes(req.path)) {
+    return res.redirect('/trocar-senha');
+  }
+  next();
+}
+
+async function alterarSenha(usuarioId, novaSenha) {
+  const novoHash = await bcrypt.hash(novaSenha, 10);
+  db.prepare(
+    'UPDATE usuarios SET senha_hash = ?, trocar_senha = 0 WHERE id = ?'
+  ).run(novoHash, usuarioId);
+}
+
 module.exports = {
   autenticar,
+  alterarSenha,
   getUsuarioLogado,
   exigirLogin,
   exigirPerfil,
+  bloquearSeSenhaPendente,
 };

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Trocar senha - Controle de Horas Extras</title>
+  <link rel="stylesheet" href="/css/estilo.css">
+</head>
+<body>
+  <main class="caixa-login">
+    <h1>Defina uma nova senha</h1>
+    <p>Este e o seu primeiro acesso (ou sua senha foi redefinida). Escolha uma nova senha para continuar.</p>
+    <% if (erro) { %>
+      <p class="erro"><%= erro %></p>
+    <% } %>
+    <form method="POST" action="/trocar-senha">
+      <label for="senha_nova">Nova senha</label>
+      <input type="password" id="senha_nova" name="senha_nova" minlength="8" required autofocus>
+
+      <label for="confirmar_senha">Confirmar nova senha</label>
+      <input type="password" id="confirmar_senha" name="confirmar_senha" minlength="8" required>
+
+      <button type="submit">Salvar</button>
+    </form>
+    <form method="POST" action="/logout">
+      <button type="submit" class="link">Sair</button>
+    </form>
+  </main>
+</body>
+</html>
