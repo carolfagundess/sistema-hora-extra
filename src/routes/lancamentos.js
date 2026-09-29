@@ -1,10 +1,15 @@
 const express = require('express');
-const { exigirLogin, bloquearSeSenhaPendente } = require('../auth');
+const { exigirLogin, bloquearSeSenhaPendente, exigirPerfil } = require('../auth');
 const lancamentosServico = require('../servicos/lancamentos');
 
 const router = express.Router();
 
-router.use(exigirLogin, bloquearSeSenhaPendente);
+// Lider nao lanca horas: sua experiencia no sistema e so autorizar e
+// acompanhar (painel de aprovacao / dashboard). Sublider e um colaborador
+// com permissoes extras, entao continua lancando as proprias horas.
+// O prefixo '/lancamentos' evita que este middleware intercepte outras
+// rotas que passam pelo mesmo router (ex: '/').
+router.use('/lancamentos', exigirLogin, bloquearSeSenhaPendente, exigirPerfil('colaborador', 'sublider'));
 
 function mesAtual() {
   return new Date().toISOString().slice(0, 7); // YYYY-MM

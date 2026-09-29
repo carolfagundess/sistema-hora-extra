@@ -13,7 +13,9 @@
         <p><%= usuario.nome %> &middot; <%= usuario.perfil %></p>
       </div>
       <nav class="nav-topo">
-        <a href="/lancamentos">Meus lancamentos</a>
+        <% if (usuario.perfil === 'sublider') { %>
+          <a href="/lancamentos">Meus lancamentos</a>
+        <% } %>
         <form method="POST" action="/logout">
           <button type="submit" class="link">Sair</button>
         </form>

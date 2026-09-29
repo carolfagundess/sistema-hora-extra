@@ -14,10 +14,11 @@ equipes ou setores dentro do sistema.
 ## Perfis
 - colaborador: lança horas e vê só o próprio histórico e saldo
 - sublider: colaborador com permissões de líder (aprova/reprova e vê
-  relatórios de todo o setor); substitui o líder, sempre ativo, sem
-  necessidade de "ausência" para valer
-- lider: mesmo escopo de aprovação e relatórios do sublider, mais gestão
-  de usuários (exclusiva do líder)
+  relatórios de todo o setor, além de lançar as próprias horas); substitui
+  o líder, sempre ativo, sem necessidade de "ausência" para valer
+- lider: não lança horas; sua experiência no sistema é só controle das
+  demandas — aprova/reprova (mesmo escopo do sublider) e acompanha por um
+  dashboard, mais gestão de usuários (exclusiva do líder)
 
 ## Modelo de dados
 - usuarios: id, nome, email (único, identificador), senha_hash (opcional),
@@ -30,6 +31,7 @@ equipes ou setores dentro do sistema.
 - O total é sempre calculado pelo servidor; nunca digitado.
 - Colaborador só edita/exclui lançamento pendente; aprovado é imutável.
 - Sublider e líder aprovam/decidem qualquer lançamento pendente do setor.
+- Líder não tem acesso à tela de lançamento (não lança horas).
 - Ninguém aprova o próprio lançamento.
 - Toda decisão registra quem e quando.
 - Permissões SEMPRE validadas no backend (middleware), nunca só na tela.
@@ -45,9 +47,9 @@ equipes ou setores dentro do sistema.
 
 ## Telas
 1. Login
-2. Meus lançamentos (formulário + lista com status + total do mês)
-3. Painel de aprovação (fila de pendentes, aprovar/reprovar, comentário, lote)
-4. Visão do setor (total por pessoa/mês, filtros, exportar Excel)
+2. Meus lançamentos (formulário + lista com status + total do mês) — colaborador e sublider
+3. Painel de aprovação (fila de pendentes, aprovar/reprovar, comentário, lote) — sublider e líder; tela inicial do líder
+4. Visão do setor (total por pessoa/mês, filtros, exportar Excel) — dashboard do líder
 5. Gestão de usuários (só líder)
 
 ## Etapas

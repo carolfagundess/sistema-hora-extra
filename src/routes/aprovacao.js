@@ -5,7 +5,9 @@ const { formatarMinutos } = require('../servicos/lancamentos');
 
 const router = express.Router();
 
-router.use(exigirLogin, bloquearSeSenhaPendente, exigirPerfil('sublider', 'lider'));
+// O prefixo '/aprovacao' evita que este middleware intercepte outras
+// rotas que passam pelo mesmo router (ex: '/').
+router.use('/aprovacao', exigirLogin, bloquearSeSenhaPendente, exigirPerfil('sublider', 'lider'));
 
 function renderizarPainel(req, res, mensagem) {
   const pendentes = aprovacaoServico.listarPendentes(req.usuarioLogado);

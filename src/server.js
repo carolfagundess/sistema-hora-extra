@@ -34,6 +34,9 @@ app.use(lancamentosRoutes);
 app.use(aprovacaoRoutes);
 
 app.get('/', exigirLogin, bloquearSeSenhaPendente, (req, res) => {
+  if (req.usuarioLogado.perfil === 'lider') {
+    return res.redirect('/aprovacao');
+  }
   res.redirect('/lancamentos');
 });
 

@@ -13,7 +13,7 @@
         <p><%= usuario.nome %> &middot; <%= usuario.perfil %></p>
       </div>
       <nav class="nav-topo">
-        <% if (usuario.perfil === 'sublider' || usuario.perfil === 'lider') { %>
+        <% if (usuario.perfil === 'sublider') { %>
           <a href="/aprovacao">Painel de aprovacao</a>
         <% } %>
         <form method="POST" action="/logout">
