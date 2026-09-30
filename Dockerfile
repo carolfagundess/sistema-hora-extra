@@ -1,5 +1,10 @@
 FROM node:22-alpine
 
+# sqlite3 (CLI) e usado so para backups manuais/administrativos
+# (docker compose exec app sqlite3 ...); o app em si usa o modulo nativo
+# node:sqlite, que nao depende deste pacote.
+RUN apk add --no-cache sqlite
+
 WORKDIR /app
 
 COPY package.json package-lock.json ./
