@@ -2,3 +2,4 @@
 # clonados/commitados a partir do Windows.
 deploy/* text eol=lf
 *.sh text eol=lf
+Dockerfile text eol=lf
