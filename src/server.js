@@ -23,6 +23,12 @@ app.set('trust proxy', 1);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '..', 'views'));
 
+// Helper das views: data ISO (AAAA-MM-DD) -> formato brasileiro (DD/MM/AAAA).
+app.locals.formatarData = (iso) => {
+  const [a, m, d] = String(iso).split('-');
+  return d && m && a ? `${d}/${m}/${a}` : iso;
+};
+
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, '..', 'public')));
 

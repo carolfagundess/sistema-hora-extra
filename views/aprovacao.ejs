@@ -53,7 +53,7 @@
                   <tr>
                     <td><input type="checkbox" name="ids" value="<%= l.id %>" class="marcar-item" form="form-lote"></td>
                     <td><strong><%= l.usuario_nome %></strong></td>
-                    <td><%= l.data %></td>
+                    <td><%= formatarData(l.data) %></td>
                     <td class="celula-secundaria"><%= l.hora_inicio %>–<%= l.hora_fim %></td>
                     <td><strong><%= formatarMinutos(l.total_minutos) %></strong></td>
                     <td><%= l.motivo %></td>

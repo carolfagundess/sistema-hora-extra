@@ -75,7 +75,7 @@
             <tbody>
               <% lancamentos.forEach(function(l) { %>
                 <tr>
-                  <td><%= l.data %></td>
+                  <td><%= formatarData(l.data) %></td>
                   <td class="celula-secundaria"><%= l.hora_inicio %>–<%= l.hora_fim %></td>
                   <td><strong><%= formatarMinutos(l.total_minutos) %></strong></td>
                   <td><%= l.motivo %></td>
