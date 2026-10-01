@@ -6,21 +6,32 @@ const db = require('../db');
 
 const MAX_TENTATIVAS = 5;
 const tentativasPorEmail = new Map();
+const JANELA_BLOQUEIO_MS = 15 * 60 * 1000; // o bloqueio expira sozinho
+
 
 function buscarPorEmail(email) {
   return db
-    .prepare('SELECT * FROM usuarios WHERE email = ? AND ativo = 1')
+    .prepare('SELECT * FROM usuarios WHERE lower(email) = lower(?) AND ativo = 1')
     .get(email);
 }
 
 function excedeuTentativas(email) {
-  const tentativas = tentativasPorEmail.get(email) || 0;
-  return tentativas >= MAX_TENTATIVAS;
+  const registro = tentativasPorEmail.get(email);
+  if (!registro) return false;
+  if (Date.now() - registro.inicio > JANELA_BLOQUEIO_MS) {
+    tentativasPorEmail.delete(email);
+    return false;
+  }
+  return registro.total >= MAX_TENTATIVAS;
 }
 
 function registrarFalha(email) {
-  const tentativas = tentativasPorEmail.get(email) || 0;
-  tentativasPorEmail.set(email, tentativas + 1);
+  const registro = tentativasPorEmail.get(email);
+  if (!registro || Date.now() - registro.inicio > JANELA_BLOQUEIO_MS) {
+    tentativasPorEmail.set(email, { total: 1, inicio: Date.now() });
+  } else {
+    registro.total++;
+  }
 }
 
 function limparTentativas(email) {

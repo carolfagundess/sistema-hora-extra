@@ -37,6 +37,7 @@ app.use(
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
+      sameSite: 'lax', // bloqueia POST vindo de outro site (CSRF)
       secure: process.env.SESSION_SECURE_COOKIE === 'true',
       maxAge: 8 * 60 * 60 * 1000, // 8 horas
     },
@@ -56,6 +57,20 @@ app.get('/', exigirLogin, bloquearSeSenhaPendente, (req, res) => {
   }
   res.redirect('/lancamentos');
 });
+
+
+app.use((req, res) => {
+  res.status(404).render('erro', { mensagem: 'Pagina nao encontrada.' });
+});
+
+// Qualquer erro nao tratado vira uma pagina de erro, em vez de derrubar o processo.
+app.use((erro, req, res, next) => {
+  console.error(erro);
+  if (res.headersSent) return next(erro);
+  res.status(500).render('erro', { mensagem: 'Ocorreu um erro inesperado. Tente novamente.' });
+});
+
+process.on('unhandledRejection', (erro) => console.error('unhandledRejection:', erro));
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

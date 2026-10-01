@@ -83,10 +83,10 @@ Ainda não existe tela de "primeiro acesso" — é preciso criar a primeira
 conta líder pelo terminal, uma única vez:
 
 ```bash
-docker compose exec app node scripts/criar-usuario.js "Thomaz Perini" thomaz.perini@redeunifique.com.br lider "SenhaTemporariaForte1"
+docker compose exec app node scripts/criar-usuario.js "Nome do Lider" lider@empresa.com.br lider "SenhaTemporariaForte1"
 ```
 
-Depois disso, Thomaz loga normalmente, troca a senha (obrigatório no
+Depois disso, o líder loga normalmente, troca a senha (obrigatório no
 primeiro acesso) e cadastra o resto da equipe pela tela **Gestão de
 usuários** — sem precisar mais do terminal.
 

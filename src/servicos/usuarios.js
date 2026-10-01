@@ -18,7 +18,7 @@ function buscarPorId(id) {
 }
 
 function buscarPorEmail(email) {
-  return db.prepare('SELECT * FROM usuarios WHERE email = ?').get(email);
+  return db.prepare('SELECT * FROM usuarios WHERE lower(email) = lower(?)').get(email);
 }
 
 function validarPerfil(perfil) {
@@ -28,6 +28,7 @@ function validarPerfil(perfil) {
 }
 
 async function criar({ nome, email, perfil, senhaInicial, gestorId }) {
+  email = typeof email === 'string' ? email.trim().toLowerCase() : email;
   if (!nome || !email || !perfil || !senhaInicial) {
     throw new Error('Preencha todos os campos.');
   }
@@ -52,6 +53,9 @@ async function criar({ nome, email, perfil, senhaInicial, gestorId }) {
 // Atualiza dados cadastrais (nome, perfil, ativo). Nao mexe em senha.
 function atualizar(id, { nome, perfil, ativo }) {
   validarPerfil(perfil);
+  if (!buscarPorId(id)) {
+    throw new Error('Usuario nao encontrado.');
+  }
   if (!nome) {
     throw new Error('Informe o nome.');
   }
@@ -66,6 +70,9 @@ async function redefinirSenha(id, novaSenha) {
     throw new Error('A senha deve ter pelo menos 8 caracteres.');
   }
   const senhaHash = await bcrypt.hash(novaSenha, SALT_ROUNDS);
+  if (!buscarPorId(id)) {
+    throw new Error('Usuario nao encontrado.');
+  }
   db.prepare(
     'UPDATE usuarios SET senha_hash = ?, trocar_senha = 1 WHERE id = ?'
   ).run(senhaHash, id);

@@ -12,7 +12,7 @@ const router = express.Router();
 router.use('/lancamentos', exigirLogin, bloquearSeSenhaPendente, exigirPerfil('colaborador', 'sublider'));
 
 function mesAtual() {
-  return new Date().toISOString().slice(0, 7); // YYYY-MM
+  return new Date().toLocaleDateString('sv-SE', { timeZone: 'America/Sao_Paulo' }).slice(0, 7); // YYYY-MM
 }
 
 function renderizarLista(req, res, erro) {

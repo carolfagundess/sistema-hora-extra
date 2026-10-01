@@ -11,7 +11,7 @@ const router = express.Router();
 router.use('/relatorio', exigirLogin, bloquearSeSenhaPendente, exigirPerfil('sublider', 'lider'));
 
 function mesAtual() {
-  return new Date().toISOString().slice(0, 7); // YYYY-MM
+  return new Date().toLocaleDateString('sv-SE', { timeZone: 'America/Sao_Paulo' }).slice(0, 7); // YYYY-MM
 }
 
 function mesValido(mes) {

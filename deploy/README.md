@@ -57,7 +57,7 @@ criado uma vez, direto pelo terminal, antes de qualquer login:
 
 ```bash
 sudo -u horas-extras env DB_PATH=/var/lib/horas-extras/dados.sqlite \
-  node scripts/criar-usuario.js "Thomaz Perini" thomaz.perini@redeunifique.com.br lider "DEFINA-UMA-SENHA-FORTE-AQUI"
+  node scripts/criar-usuario.js "Nome do Lider" lider@empresa.com.br lider "DEFINA-UMA-SENHA-FORTE-AQUI"
 ```
 
 Depois disso, o próprio líder cadastra o resto da equipe pela tela

@@ -15,7 +15,30 @@ function calcularMinutos(horaInicio, horaFim) {
   return minutos;
 }
 
+const RE_DATA = /^\d{4}-\d{2}-\d{2}$/;
+const RE_HORA = /^([01]\d|2[0-3]):[0-5]\d$/;
+
+// Confere se a data existe no calendario (recusa 30/02, 31/04, 29/02 de ano nao bissexto).
+function dataExiste(data) {
+  const d = new Date(`${data}T00:00:00Z`);
+  return !Number.isNaN(d.getTime()) && d.toISOString().slice(0, 10) === data;
+}
+
+// O navegador ja restringe os campos, mas o servidor nao pode confiar nisso.
+function validarEntrada({ data, horaInicio, horaFim, motivo }) {
+  if (typeof data !== 'string' || !RE_DATA.test(data) || !dataExiste(data)) {
+    throw new Error('Data invalida.');
+  }
+  if (!RE_HORA.test(horaInicio) || !RE_HORA.test(horaFim)) {
+    throw new Error('Horario invalido (use HH:MM).');
+  }
+  if (typeof motivo !== 'string' || motivo.length > 500) {
+    throw new Error('Motivo invalido (maximo 500 caracteres).');
+  }
+}
+
 function criar({ usuarioId, data, horaInicio, horaFim, motivo }) {
+  validarEntrada({ data, horaInicio, horaFim, motivo });
   const totalMinutos = calcularMinutos(horaInicio, horaFim);
   if (totalMinutos <= 0) {
     throw new Error('O horario final deve ser depois do horario inicial.');
@@ -53,6 +76,7 @@ function totalMinutosDoMes(usuarioId, anoMes) {
 }
 
 function atualizar(id, { data, horaInicio, horaFim, motivo }) {
+  validarEntrada({ data, horaInicio, horaFim, motivo });
   const totalMinutos = calcularMinutos(horaInicio, horaFim);
   if (totalMinutos <= 0) {
     throw new Error('O horario final deve ser depois do horario inicial.');
