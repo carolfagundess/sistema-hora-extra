@@ -6,7 +6,7 @@ services:
     environment:
       NODE_ENV: production
       SESSION_SECRET: ${SESSION_SECRET:?defina SESSION_SECRET no .env}
-      SESSION_SECURE_COOKIE: "false"
+      SESSION_SECURE_COOKIE: "true"
       DB_PATH: /data/dados.sqlite
     volumes:
       - dados-horas-extras:/data
